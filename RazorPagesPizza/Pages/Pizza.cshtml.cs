@@ -3,10 +3,19 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using RazorPagesPizza.Models;
 using RazorPagesPizza.Services;
 
+// Turorial
+using Microsoft.AspNetCore.Authorization;
+
 namespace RazorPagesPizza.Pages
 {
+    // Turorial
+    [Authorize]
+
     public class PizzaModel : PageModel
     {
+        // Tutorial
+        public bool IsAdmin => HttpContext.User.HasClaim("IsAdmin", bool.TrueString);
+        
         public List<Pizza> pizzas = new();
 
         [BindProperty]
@@ -19,6 +28,9 @@ namespace RazorPagesPizza.Pages
 
         public IActionResult OnPost()
         {
+            // Tutorial
+            if (!IsAdmin) return Forbid();
+
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -29,6 +41,9 @@ namespace RazorPagesPizza.Pages
 
         public IActionResult OnPostDelete(int id)
         {
+            // Tutorial
+            if (!IsAdmin) return Forbid();
+            
             PizzaService.Delete(id);
             return RedirectToAction("Get");
         }

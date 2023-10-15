@@ -1,0 +1,47 @@
+@using Microsoft.AspNetCore.Identity
+
+@* Tutorial *@
+@using RazorPagesPizza.Areas.Identity.Data
+@inject SignInManager<RazorPagesPizzaUser> SignInManager
+@inject UserManager<RazorPagesPizzaUser> UserManager
+
+<ul class="navbar-nav">
+
+
+@* Original
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager *@
+
+<ul class="navbar-nav">
+@if (SignInManager.IsSignedIn(User))
+{
+
+    @* Tutorial start *@
+    RazorPagesPizzaUser user = await UserManager.GetUserAsync(User);
+    var fullName = $"{user.FirstName} {user.LastName}";
+    @* Tutorial end *@
+
+    <li class="nav-item">
+        @* Tutorial start *@
+        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello, @fullName!</a>
+        @* Tutorial end *@
+
+        @* <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a> *@
+
+    </li>
+    <li class="nav-item">
+        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
+            <button id="logout" type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+        </form>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+    </li>
+}
+</ul>
